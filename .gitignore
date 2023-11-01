@@ -1,0 +1,16 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/tutorialdb
+tutorialdb.so
+tutorialdb.dylib
+tutorialdb.dll
+tutorialdb.a
+tutorialdb.lib
+tutorialdb-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst
