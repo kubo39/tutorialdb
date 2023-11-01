@@ -3,7 +3,7 @@ import core.stdc.string : memcpy, strcpy;
 
 import std.format : formattedRead;
 import std.stdio;
-import std.string : chomp, startsWith, toStringz;
+import std.string : chomp, fromStringz, startsWith, toStringz;
 
 enum uint PAGE_SIZE = 4096;
 enum uint TABLE_MAX_PAGES = 100;
@@ -137,7 +137,11 @@ ExecuteResult executeInsert(Statement* statement, Table* table)
 
 void printRow(const(Row)* row)
 {
-	writefln!"(%d %s %s)"(row.id, row.username, row.email);
+	writefln!"(%d, %s, %s)"(
+		row.id,
+		row.username.fromStringz,
+		row.email.fromStringz
+	);
 }
 
 ExecuteResult executeSelect(Statement* statement, Table* table)
