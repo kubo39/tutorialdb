@@ -68,7 +68,7 @@ align(1):
 	char[COLUMN_EMAIL_SIZE] email;
 }
 
-void serializeRow(Row* source, void* destination)
+void serializeRow(const(Row)* source, void* destination)
 {
 	memcpy(destination + ID_OFFSET, &source.id, ID_SIZE);
 	memcpy(destination + USERNAME_OFFSET, &source.username, USERNAME_SIZE);
@@ -127,7 +127,7 @@ ExecuteResult executeInsert(Statement* statement, Table* table)
 	if (table.numRows >= TABLE_MAX_ROWS)
 		return ExecuteResult.TABLE_FULL;
 
-	Row* rowToInsert = &statement.rowToInsert;
+	const(Row)* rowToInsert = &statement.rowToInsert;
 
 	serializeRow(rowToInsert, rowSlot(table, table.numRows));
 	table.numRows++;
