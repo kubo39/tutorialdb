@@ -1,5 +1,5 @@
 import core.stdc.stdlib : exit, EXIT_SUCCESS, free, malloc;
-import core.stdc.string : memcpy, strcpy;
+import core.stdc.string : memcpy;
 
 import std.format : formattedRead;
 import std.stdio;
@@ -93,16 +93,13 @@ PrepareResult prepareStatement(string input, ref Statement statement)
 	if (input.startsWith("insert"))
 	{
 		statement.type = StatementType.INSERT;
-		string username, email;
-		auto argsAssinged = formattedRead(
-			input[6..$], " %d %s %s",
+		auto argsAssinged = formattedRead!" %d %s %s"(
+			input[6..$],
 			statement.rowToInsert.id,
-			username,
-			email
+			statement.rowToInsert.username.ptr,
+			statement.rowToInsert.email.ptr
 		);
 
-		strcpy(&statement.rowToInsert.username[0], cast(const)(username ~ '\0').dup.ptr);
-		strcpy(&statement.rowToInsert.email[0], cast(const)(email ~ '\0').dup.ptr);
 		if (argsAssinged < 3)
 			return PrepareResult.SYNTAX_ERROR;
 		return PrepareResult.SUCCESS;
