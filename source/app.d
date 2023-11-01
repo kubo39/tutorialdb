@@ -1,5 +1,5 @@
 import core.stdc.stdlib : exit, EXIT_SUCCESS, free, malloc;
-import core.stdc.string : memcpy;
+import core.stdc.string : memcpy, strcpy;
 
 import std.format : formattedRead;
 import std.stdio;
@@ -93,12 +93,16 @@ PrepareResult prepareStatement(string input, ref Statement statement)
 	if (input.startsWith("insert"))
 	{
 		statement.type = StatementType.INSERT;
+		char[] username, email;
 		auto argsAssinged = formattedRead!" %d %s %s"(
 			input[6..$],
 			statement.rowToInsert.id,
-			statement.rowToInsert.username.ptr,
-			statement.rowToInsert.email.ptr
+			username,
+			email
 		);
+
+		strcpy(&statement.rowToInsert.username[0], (username ~ '\0').ptr);
+		strcpy(&statement.rowToInsert.email[0], (email ~ '\0').ptr);
 
 		if (argsAssinged < 3)
 			return PrepareResult.SYNTAX_ERROR;
@@ -120,7 +124,6 @@ enum ExecuteResult
 
 ExecuteResult executeInsert(Statement* statement, Table* table)
 {
-	writeln("executeInsert.");
 	if (table.numRows >= TABLE_MAX_ROWS)
 		return ExecuteResult.TABLE_FULL;
 
